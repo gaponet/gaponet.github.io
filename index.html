@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="GapONet learns a branch-trunk operator for the payload-induced humanoid sim-to-real gap using TWINS, a paired multi-simulator payload-sweep dataset.">
+  <meta name="keywords" content="GapONet, TWINS, sim-to-real, humanoid robots, payload variation, operator learning, DeepONet">
+  <meta property="og:title" content="GapONet: Bridging the Nonlinear Sim-to-Real Gap under Payload Variation via Operator Learning">
+  <meta property="og:description" content="Anonymous project page for a payload-aware humanoid sim-to-real operator learning paper.">
+  <meta property="og:image" content="static/images/gaponet/model.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>GapONet</title>
+
+  <link rel="icon" href="static/images/icon.svg">
+  <link rel="stylesheet" href="static/css/index.css">
+</head>
+<body>
+  <header class="site-hero">
+    <nav class="topbar" aria-label="Page sections">
+      <a class="brand" href="#top" aria-label="GapONet home">GapONet</a>
+      <div class="nav-links">
+        <a href="#dataset">Dataset</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+      </div>
+    </nav>
+
+    <section id="top" class="hero-grid hero-centered">
+      <div class="hero-copy">
+        <p class="eyebrow">Anonymous Submission</p>
+        <h1><span class="title-name">GapONet</span><span class="title-rest">Bridging the Nonlinear Sim-to-Real Gap under Payload Variation via Operator Learning</span></h1>
+        <p class="subtitle">
+          A dynamics-context operator for payload-aware humanoid sim-to-real transfer, separating the measured dynamics regime from the queried action command.
+        </p>
+
+        <div class="button-row" aria-label="Project links">
+          <a class="project-button primary" href="paper release link placeholder">Paper</a>
+          <a class="project-button" href="#" aria-disabled="true" title="https://drive.google.com/file/d/1QwpnqICmRudUBFrtv7UdlgXQ8lSF0JOv/view?usp=sharing">Dateset(test)</a>
+          <a class="project-button" href="#" aria-disabled="true" title="static/gaponet_code.zip">Code</a>
+        </div>
+
+        <div class="metric-strip" aria-label="Headline metrics">
+          <div>
+            <strong>&lt;1%</strong>
+            <span>LGR across 0-3 kg</span>
+          </div>
+          <div>
+            <strong>0.84%</strong>
+            <span>LGR at 3 kg</span>
+          </div>
+          <div>
+            <strong>0.38 ms</strong>
+            <span>online latency</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <main>
+    <section class="section abstract-section">
+      <div class="section-kicker">Abstract</div>
+      <div class="prose">
+        <p>
+          Deploying a simulation-trained controller on hardware requires bridging a sim-to-real gap, and carrying a payload reshapes this gap in a nonlinear manner through motor dynamics. A payload does not offset a humanoid's dynamics by a constant: it couples with posture, velocity, and acceleration, leaving a state-dependent residual that varies across joints, motions, and units.
+        </p>
+        <p>
+          GapONet learns this gap as an operator. It maps a measured dynamics context, inferred online from recent motion, to an action-conditioned residual through a DeepONet-style branch-trunk factorization. Keeping the dynamics regime separate from the commanded action lets one correction recombine for payload-motion pairs never seen together.
+        </p>
+        <p>
+          On three platforms spanning full-size and wheeled humanoids, the paired sim-real large-gap ratio remains below 1% across the full 0-3 kg sweep, including 0.84% at the 3 kg per-wrist limit versus 6.25% for the strongest baseline. Deployed sign-flipped as an online compensator, the same operator transfers to an unseen physical robot with zero calibration.
+        </p>
+      </div>
+    </section>
+
+    <section id="method" class="section">
+      <div class="section-heading">
+        <p class="section-kicker">Method</p>
+        <h2>Branch-trunk operator learning separates dynamics regime from action query.</h2>
+      </div>
+      <figure class="wide-figure interactive-model">
+        <img src="static/images/gaponet/model.png" alt="GapONet data collection, operator training, and online deployment pipeline">
+        <figcaption>The four panels below follow the labels in the figure without covering the architecture diagram.</figcaption>
+      </figure>
+      <div class="model-tabs" aria-label="GapONet pipeline panel summaries">
+        <article class="model-tab">
+          <span class="panel-mark">a</span>
+          <h3>Data Collection</h3>
+          <p>Paired real and simulated rollouts across payloads, robot platforms, and simulators under matched commands.</p>
+        </article>
+        <article class="model-tab">
+          <span class="panel-mark">b</span>
+          <h3>Actuation Function</h3>
+          <p>The sim-to-real gap is cast as a discrepancy between local actuation-function responses.</p>
+        </article>
+        <article class="model-tab">
+          <span class="panel-mark">c</span>
+          <h3>GapONet Training</h3>
+          <p>Branch and trunk networks factorize dynamics context and action query into a residual correction.</p>
+        </article>
+        <article class="model-tab">
+          <span class="panel-mark">d</span>
+          <h3>Model Evaluation</h3>
+          <p>Recent sensor history predicts context online and sends the correction through PD control.</p>
+        </article>
+      </div>
+      <figure class="wide-figure representation-figure">
+        <img src="static/images/gaponet/generalization.png" alt="Feature-space comparison of domain randomization, system identification, pointwise MLP, and GapONet">
+        <figcaption>GapONet forms a connected branch-trunk manifold across payload and motion, while non-operator alternatives collapse, separate, or entangle the space.</figcaption>
+      </figure>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <p class="section-kicker">Motivation</p>
+        <h2>Payload changes the local actuation structure, not just its magnitude.</h2>
+      </div>
+      <div class="two-column">
+        <figure class="paper-figure">
+          <img src="static/images/gaponet/motivation.png" alt="Payload-induced context drift and heterogeneous probe shifts">
+          <figcaption>Payload increases context drift nonlinearly and changes the response of probes heterogeneously.</figcaption>
+        </figure>
+        <div class="prose">
+          <p>
+            Fixed gain tuning, open-loop feedforward, and ordinary parameter fitting cannot close the gap because the residual includes posture-dependent inertia, gravity loading, contact, backlash, and friction effects that are outside a fixed rigid-body parameterization.
+          </p>
+          <p>
+            The paper treats this residual as an operator on the robot's measured response rather than as a scalar payload offset or a re-identified set of model parameters.
+          </p>
+          <ul class="callout-list">
+            <li>Payload effects grow unevenly as mass approaches the 3 kg per-wrist limit.</li>
+            <li>The residual varies across joints, motions, and robot units.</li>
+            <li>Pointwise residual models entangle payload and action, then fail on unseen combinations.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="dataset" class="section tinted">
+      <div class="section-heading">
+        <p class="section-kicker">TWINS Dataset</p>
+        <h2>A paired multi-simulator corpus for controlled payload-gap analysis.</h2>
+      </div>
+      <div class="two-column reverse">
+        <div class="prose">
+          <p>
+            TWINS stores time-synchronized real trajectories and simulator replicas under matched commands, gains, timing, and payload. Each sequence contains one real rollout plus Isaac Sim, Isaac Gym, and MuJoCo replicas, enabling frame-level state-gap analysis and transition-level supervision.
+          </p>
+          <div class="compact-table light-table" role="table" aria-label="TWINS dataset summary">
+            <div class="compact-row header" role="row"><span>Property</span><span>TWINS</span></div>
+            <div class="compact-row" role="row"><span>Scale</span><span>30,808 paired sequences, 36.9M frames, about 205 h</span></div>
+            <div class="compact-row" role="row"><span>Payload sweep</span><span>0, 1, 2, 3 kg, controlled and standardized</span></div>
+            <div class="compact-row" role="row"><span>Pairing</span><span>Real trajectory plus Isaac Sim, Isaac Gym, and MuJoCo replicas</span></div>
+            <div class="compact-row" role="row"><span>Signals</span><span>State, acceleration, torque, payload mass, motor temperature</span></div>
+          </div>
+        </div>
+        <figure class="paper-figure">
+          <img src="static/images/gaponet/dataset_portrait.png" alt="TWINS dataset portrait showing sequence counts, platforms, payloads, simulators, and recorded signals">
+          <figcaption>TWINS includes paired sequences with states, acceleration, torque, payload mass, and motor temperature.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="results" class="section dark">
+      <div class="section-heading">
+        <p class="section-kicker">Results</p>
+        <h2>Sub-1% large-gap ratio across the full 0-3 kg payload sweep.</h2>
+      </div>
+      <div class="results-layout">
+        <figure class="paper-figure">
+          <img src="static/images/gaponet/payload_summary.png" alt="Payload sweep comparing method-family failure modes and GapONet margin">
+          <figcaption>Only GapONet stays in the sub-1% LGR regime across all payloads.</figcaption>
+        </figure>
+        <div class="result-table" role="table" aria-label="Zero-shot LGR by payload">
+          <div class="table-row header" role="row">
+            <span>Payload</span><span>Strongest baseline LGR</span><span>GapONet LGR</span>
+          </div>
+          <div class="table-row" role="row"><span>0 kg</span><span>3.17%</span><span>0.09%</span></div>
+          <div class="table-row" role="row"><span>1 kg</span><span>5.60%</span><span>0.22%</span></div>
+          <div class="table-row" role="row"><span>2 kg</span><span>0.44%</span><span>0.39%</span></div>
+          <div class="table-row" role="row"><span>3 kg</span><span>6.25%</span><span>0.84%</span></div>
+        </div>
+      </div>
+      <div class="compact-table dark-table result-wide-table" role="table" aria-label="Cross-platform and ablation summary">
+        <div class="compact-row header" role="row"><span>Setting</span><span>Key result from main_v2.tex</span></div>
+        <div class="compact-row" role="row"><span>Cross-platform, 3 kg</span><span>GapONet reaches 0.84% on Unitree H1-2, 0.79% on Fourier GR, and 0.72% on RealMan.</span></div>
+        <div class="compact-row" role="row"><span>Fusion ablation, 3 kg</span><span>MLP-Sensor remains at 12.05% LGR; branch-trunk GapONet cuts it to 0.84%.</span></div>
+      </div>
+      <div class="evidence-grid">
+        <article>
+          <h3>Cross-platform</h3>
+          <p>At 3 kg, GapONet reaches 0.84% LGR on Unitree H1-2, 0.79% on Fourier GR, and 0.72% on RealMan while baselines degrade with payload.</p>
+        </article>
+        <article>
+          <h3>Fusion ablation</h3>
+          <p>With the same context, action, training recipe, and comparable capacity, only the branch-trunk product cuts 3 kg LGR to 0.84%.</p>
+        </article>
+        <article>
+          <h3>Sensor context</h3>
+          <p>The operator is trained on predicted context, so systematic sensor-predictor bias is absorbed rather than requiring true physical parameters.</p>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Anonymous project page for peer review. Dataset and code links are reserved for release.</p>
+  </footer>
+</body>
+</html>
