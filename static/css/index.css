@@ -143,11 +143,11 @@ img {
 
 .eyebrow,
 .section-kicker {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   color: var(--green);
-  font-size: clamp(18px, 2vw, 24px);
+  font-size: clamp(28px, 3vw, 36px);
   font-weight: 900;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
@@ -325,7 +325,7 @@ figcaption {
 
 .abstract-section {
   display: grid;
-  grid-template-columns: 180px minmax(0, 1fr);
+  grid-template-columns: 260px minmax(0, 1fr);
   gap: 32px;
 }
 
@@ -336,7 +336,7 @@ figcaption {
 
 .section-heading h2 {
   margin: 0;
-  font-size: clamp(18px, 1.8vw, 22px);
+  font-size: clamp(16px, 1.55vw, 20px);
   line-height: 1.28;
   letter-spacing: 0;
   font-weight: 760;
@@ -365,7 +365,7 @@ figcaption {
 }
 
 .video-section .section-heading h2 {
-  font-size: clamp(18px, 1.8vw, 22px);
+  font-size: clamp(16px, 1.55vw, 20px);
 }
 
 .video-shell {
