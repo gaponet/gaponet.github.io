@@ -143,11 +143,11 @@ img {
 
 .eyebrow,
 .section-kicker {
-  margin: 0 0 14px;
+  margin: 0 0 10px;
   color: var(--green);
-  font-size: 12px;
-  font-weight: 850;
-  letter-spacing: 0.16em;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 900;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -336,9 +336,10 @@ figcaption {
 
 .section-heading h2 {
   margin: 0;
-  font-size: clamp(30px, 4vw, 48px);
-  line-height: 1.08;
+  font-size: clamp(18px, 1.8vw, 22px);
+  line-height: 1.28;
   letter-spacing: 0;
+  font-weight: 760;
 }
 
 .prose p {
@@ -364,7 +365,7 @@ figcaption {
 }
 
 .video-section .section-heading h2 {
-  font-size: clamp(28px, 3.2vw, 42px);
+  font-size: clamp(18px, 1.8vw, 22px);
 }
 
 .video-shell {
