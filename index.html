@@ -61,14 +61,12 @@
       <div class="section-kicker">Abstract</div>
       <div class="prose">
         <p>
-          Deploying a simulation-trained controller on hardware requires bridging a sim-to-real gap, and carrying a payload reshapes this gap in a nonlinear manner through motor dynamics. A payload does not offset a humanoid's dynamics by a constant: it couples with posture, velocity, and acceleration, leaving a state-dependent residual that varies across joints, motions, and units.
+          Deploying a simulation-trained controller on hardware requires bridging a sim-to-real gap, and carrying a payload reshapes this gap in a nonlinear manner through its effects on motor dynamics. A payload does not offset a humanoid's dynamics by a constant: it couples with posture, velocity, and acceleration, leaving a state-dependent residual that varies across joints, motions, and units. Classical payload adaptation, from adaptive control to system identification, calibrates a fixed model and must be re-identified whenever the payload or unit changes.</p>
+        <p>
+          Because this residual lies outside any fixed rigid-body parameterization, parameter estimation retains an irreducible floor that recalibration cannot remove. We instead learn the gap as an operator: GapONet maps a measured dynamics context, inferred online from recent motion, to an action-conditioned residual through a DeepONet-style branch-trunk factorization that encodes the dynamics regime separately from the commanded action.
         </p>
         <p>
-          GapONet learns this gap as an operator. It maps a measured dynamics context, inferred online from recent motion, to an action-conditioned residual through a DeepONet-style branch-trunk factorization. Keeping the dynamics regime separate from the commanded action lets one correction recombine for payload-motion pairs never seen together.
-        </p>
-        <p>
-          On three platforms spanning full-size and wheeled humanoids, the paired sim-real large-gap ratio remains below 1% across the full 0-3 kg sweep, including 0.84% at the 3 kg per-wrist limit versus 6.25% for the strongest baseline. Deployed sign-flipped as an online compensator, the same operator transfers to an unseen physical robot with zero calibration.
-        </p>
+          The paired sim-real large-gap ratio stays below 1% across the full 0-3kg sweep (0.84% at the 3kg per-wrist limit, vs 6.25% for the strongest baseline) on four platforms spanning full-size and wheeled humanoids, each a held-out unit. Deployed sign-flipped as an online compensator, the same operator transfers to an unseen physical robot with zero calibration. We release TWINS, a paired multi-simulator corpus under a controlled payload sweep to the dual-arm limit (6kg).</p>
       </div>
     </section>
 
